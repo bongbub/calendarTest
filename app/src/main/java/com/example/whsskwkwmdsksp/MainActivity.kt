@@ -23,12 +23,17 @@ class MainActivity : AppCompatActivity(), OnDateClickListener {
         binding.viewPager.setCurrentItem(12, false)
 
         updateYearMonth(12)
+        
+        
+        // 뷰페이저의 페이지 변경 이벤트 감지해서 연도/월 업뎃
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 updateYearMonth(position)
             }
         })
+
+
     }private fun updateYearMonth(position: Int) {
         val calendar = calendarAdapter.getCalendarAtPosition(position)
         val year = calendar.get(Calendar.YEAR)
@@ -37,7 +42,7 @@ class MainActivity : AppCompatActivity(), OnDateClickListener {
     }
 
     override fun onClicked(calendarDate: CalendarUiState.CalendarDate) {
-        // Handle date click
+        // 날짜 클릭처리
     }
 }
 

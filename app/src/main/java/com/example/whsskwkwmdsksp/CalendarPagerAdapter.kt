@@ -63,11 +63,13 @@ class CalendarPagerAdapter(private val onDateClickListener: OnDateClickListener)
             val daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
 
             for (i in 0 until firstDayOfWeek) {
-                calendarItems.add(CalendarUiState.CalendarDate("", false))
+                calendarItems.add(CalendarUiState.CalendarDate("", false,-1))
             }
 
             for (day in 1..daysInMonth) {
-                calendarItems.add(CalendarUiState.CalendarDate(day.toString(), true))
+                calendar.set(Calendar.DAY_OF_MONTH, day)
+                val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
+                calendarItems.add(CalendarUiState.CalendarDate(day.toString(), true, dayOfWeek))
             }
 
             return calendarItems

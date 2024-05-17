@@ -13,27 +13,6 @@ import com.example.whsskwkwmdsksp.databinding.ItemCalendarHeaderBinding
 import java.util.*
 
 
-sealed class CalendarUiState(val id: String = UUID.randomUUID().toString()) {
-
-    // 헤더 데이터 클래스로 양식 설정
-    data class CalendarHeader(
-        val name: String,
-        val backgroundResId:Int = R.drawable.shape_calendar_header
-    ) : CalendarUiState()
-
-    // 날짜(일) 데이터 클래스로 양식 설정
-    data class CalendarDate(
-        val date: String,
-        val isCurrentMonth: Boolean,
-        val backgroundResId: Int = R.drawable.shape_calendar_date
-    ) : CalendarUiState()
-
-    companion object {
-        const val HEADER_VIEW_TYPE = 1
-        const val DATE_VIEW_TYPE = 2
-    }
-}
-
 class CalendarAdapter(private val onDateClickListener: OnDateClickListener) :
     ListAdapter<CalendarUiState, RecyclerView.ViewHolder>(calendarUiStateDiffUtil) {
 
@@ -82,7 +61,6 @@ class CalendarAdapter(private val onDateClickListener: OnDateClickListener) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(header: CalendarUiState.CalendarHeader) {
             binding.textViewDay.text = header.name
-            //binding.root.setBackgroundColor(ContextCompat.getColor(binding.root.context, R.color.maincolor))
             binding.textViewDay.setTextColor(Color.BLACK)
         }
     }
@@ -90,7 +68,16 @@ class CalendarAdapter(private val onDateClickListener: OnDateClickListener) :
     class CalendarDateViewHolder(private val binding: ItemCalendarDateBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(date: CalendarUiState.CalendarDate, clickListener: OnDateClickListener) {
+
+            val textColor = when (date.dayOfWeek) {
+                Calendar.SUNDAY -> ContextCompat.getColor(binding.root.context, R.color.red)
+                Calendar.SATURDAY -> ContextCompat.getColor(binding.root.context, R.color.blue)
+                else -> ContextCompat.getColor(binding.root.context, R.color.black)
+            }
+
             binding.textViewDay.text = date.date
+            binding.textViewDay.setBackgroundResource(date.backgroundResId)
+            binding.textViewDay.setTextColor(textColor)
             if (date.isCurrentMonth) {
                 binding.textViewDay.setTextColor(ContextCompat.getColor(binding.root.context, R.color.black))
             } else {
@@ -102,7 +89,6 @@ class CalendarAdapter(private val onDateClickListener: OnDateClickListener) :
         }
     }
 }
-
 interface OnDateClickListener {
     fun onClicked(calendarDate: CalendarUiState.CalendarDate)
 }
